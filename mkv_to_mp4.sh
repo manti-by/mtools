@@ -7,7 +7,8 @@ do
     result_name="./mp4/"${file_name%.*}".mp4"
     echo "Converting file: $original_name to $result_name"
     ffmpeg -i "$original_name" -c:v h264_nvenc \
-        -vf "scale=1280:-1, scale=1280:trunc(iw/2)*2" -b:v 2500k \ 
-        -profile:v high -level 4.1 -preset medium \
+        -map 0:v -map 0:a:language:rus \
+        -vf "scale_npp=1280:-1, scale_npp=1280:trunc(iw/2)*2" \
+        -b:v 2500k -profile:v high -level 4.1 -preset medium \
         -c:a libmp3lame -b:a 192k "$result_name"
 done
