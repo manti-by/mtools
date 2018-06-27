@@ -1,11 +1,28 @@
 #!/bin/bash
-echo "Trying to create BIN directory"
-mkdir /home/${USER}/bin
+TARGET=${1:-install}
 
-echo "Installing scripts"
-ln -s $(pwd)/fix_gnome.sh /home/${USER}/bin/fix_gnome
-ln -s $(pwd)/flac_to_mp3.sh /home/${USER}/bin/flac_to_mp3
-ln -s $(pwd)/mkv_to_mkv.sh /home/${USER}/bin/mkv_to_mkv
-ln -s $(pwd)/mkv_to_mp4.sh /home/${USER}/bin/mkv_to_mp4
-ln -s $(pwd)/pyclean.sh /home/${USER}/bin/pyclean
-ln -s $(pwd)/update.sh /home/${USER}/bin/update
+if [ "$TARGET" == "install" ]; then
+    if [ ! -d "/home/${USER}/bin" ]; then
+        echo "Creating user bin directory"
+        mkdir /home/${USER}/bin
+    fi
+
+    echo "Installing scripts"
+    for file in scripts/*.sh
+    do
+        file_name="${file##*/}"   
+        original_name=$(pwd)"/scripts/$file_name"
+        result_name="/home/${USER}/bin/${file_name%.*}"
+        ln -s $original_name $result_name
+        echo "    ${file_name%.*} installed"
+        echo "${file_name%.*}" >> install.lock
+    done
+else
+    echo "Removing scripts"
+    while read -r file_name
+    do
+        rm /home/${USER}/bin/$file_name
+        echo "    $file_name removed"
+    done < install.lock
+    truncate -s 0 install.lock
+fi
