@@ -8,7 +8,7 @@ if [ "$TARGET" == "install" ]; then
     fi
 
     echo "Installing scripts"
-    for file in scripts/*.sh
+    for file in scripts/*.sh scripts/*.py
     do
         file_name="${file##*/}"   
         original_name=$(pwd)"/scripts/$file_name"
