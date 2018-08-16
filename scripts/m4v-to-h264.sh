@@ -1,6 +1,6 @@
 #!/bin/bash
 mkdir h264
-for file in ./*.mkv
+for file in ./*.m4v
 do
     file_name="${file##*/}"   
     original_name="./"$file_name
