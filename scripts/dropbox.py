@@ -5,7 +5,7 @@ import dropbox
 
 
 CHUNK_SIZE = 4 * 1024 * 1024
-AUTH_TOKEN = os.environ('AUTH_TOKEN')
+AUTH_TOKEN = os.getenv('DROPBOX_AUTH_TOKEN')
 
 
 parser = argparse.ArgumentParser(
