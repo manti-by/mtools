@@ -20,9 +20,10 @@ parser.add_argument('-u', '--upload',
 
 
 if __name__ == '__main__':
+    args = parser.parse_args()
     if args.upload:
         file_path = args.upload
-        dest_path = '/Apps/m2server/{}'.format(os.path.basename(file_path))
+        dest_path = '/{}'.format(os.path.basename(file_path))
 
         print('Uploading file {}'.format(file_path))
         f = open(file_path, 'rb')
@@ -30,7 +31,7 @@ if __name__ == '__main__':
 
         dbx = dropbox.Dropbox(AUTH_TOKEN)
         if file_size <= CHUNK_SIZE:
-            dbx.files_upload(f, dest_path)
+            dbx.files_upload(f.read(), dest_path)
         else:
             session = dbx.files_upload_session_start(f.read(CHUNK_SIZE))
             cursor = dropbox.files.UploadSessionCursor(session_id=session.session_id,
