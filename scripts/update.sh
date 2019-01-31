@@ -12,8 +12,8 @@ sudo apt update
 sudo apt upgrade -y
 
 header "Autoremove system packages"
-sudo apt clean 
-sudo apt autoremove --purge
+sudo apt clean -y 
+sudo apt autoremove -y --purge
 
 header "Update snaps"
 sudo snap refresh
