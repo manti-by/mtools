@@ -16,7 +16,7 @@ sudo apt clean -y
 sudo apt autoremove -y --purge
 
 header "Update flatpacks"
-sudo latpak update -y
+sudo flatpak update -y
 
 header "Remove uninstalled flatpacks"
 sudo flatpak uninstall -y --unused
@@ -26,7 +26,7 @@ sudo snap refresh
 
 header "Remove stale snaps"
 set -eu
-snap list --all | awk '/disabled/{print $1, $3}' |
+sudo snap list --all | awk '/disabled/{print $1, $3}' |
     while read snapname revision; do
-        snap remove "$snapname" --revision="$revision"
+        sudo snap remove "$snapname" --revision="$revision"
     done
