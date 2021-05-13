@@ -1,7 +1,7 @@
 #!/usr/bin/python3.8
 import argparse
+import os
 
-from os import environ
 from sclib import SoundcloudAPI, Track, Playlist
 
 api = SoundcloudAPI()
@@ -14,15 +14,16 @@ parser = argparse.ArgumentParser(
 parser.add_argument("link", help="Soundcloud target link", type=str)
 
 parser.add_argument(
-    "-t", "--target", dest="target", nargs="?", 
-    default=f"/home/{environ['USER']}/download/",
-    help="Target download path",
+    "-t", "--target", dest="target", nargs="?", default=None,
+    help="Target download path (default to current directory)",
 )
 
 
 def download(link: str, target: str):
+    if target is None:
+        target = os.getcwd()
     track = api.resolve(link)
-    filename = f"{target}{track.artist} - {track.title}.mp3"
+    filename = f"{target}/{track.artist} - {track.title}.mp3"
     with open(filename, "wb+") as fp:
         track.write_mp3_to(fp)
 
