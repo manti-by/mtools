@@ -5,50 +5,32 @@ Simple shell scripts
 Installation and removing
 -------------------------
 
-        $ ./install.sh
-        $ ./install.sh remove
+    $ ./install.sh
+    $ ./install.sh remove
 
 
 Description
 --------------------
 
-- **arw-to-jpg** - convert all ARW files in current directory to JPG 1920x1280
+- **clean-system** - delete docker dangling containers, images and etc, clear caches.
 
-- **fix-gnome** - command to set gnome defaults
+- **git-clean** - delete stale git branches in the current repo.
 
-- **flac-to-mp3** - convert all FLACK files in current directory to MP3 with 
-bitrate 320kbps
+- **mconvert FROM_FORMAT TO_FORMAT** - convert all files in current directory from one format ot another. Possible 
+(tested) directions are: arw-to-jpg, avi-to-h264, flac-to-mp3, jpg-to-webp, m4a-to-flac, m4a-to-mp3, m4v-to-h264,
+mkv-to-h265, mkv-to-mkv, mkv-to-mp3, mkv-to-mp4, mp3-to-mp3, mp4-to-gif, mp4-to-mp3, wav-to-flac, webm-to-mp3, 
+webp-to-jpg, wmv-to-h264.
 
-- **jpg-to-webp** - convert all JPEG files in current directory to WEBP with
-quality 90
+- **pyclean** - delete python compiled files in the current directory.
 
-- **m4a-to-flac** - convert all M4A files in current directory to FLAC
+- **sort-photo** - move photos in the current directory to separate directories using date when photo was taken.
 
-- **m4a-to-mp3** - convert all M4A files in current directory to MP3 audio 320kbps
+- **soundcloud-dl** - soundcloud downloader.
 
-- **m4v-to-h264** - convert all M4V files in current directory to MKV with video
-AVC x264 1280x720, bitrate 3000kbps and AAC audio 128kbps using CUDA acceleration
+- **split-cue** - split music album using cue file.
 
-- **mkv-to-mkv** - convert all MKV files in current directory to MKV with video
-AVC x264 1280x720, bitrate 3000kbps and AAC audio 128kbps
-
-- **mkv-to-mp4** - convert all MKV files in current directory to MP4 with video
-AVC x264 1280x720, bitrate 2500kbps and MP3 audio 192kbps
-
-- **mkv-to-h264** - convert all MKV files in current directory to MKV with video
-AVC x264 1280x720, bitrate 3000kbps and AAC audio 128kbps using CUDA acceleration
-
-- **mkv-to-h265** - convert all MKV files in current directory to MKV with video
-AVC x265 1280x720, bitrate 3000kbps and AAC audio 128kbps
-
-- **mp4-to-gif** - convert all MP4 files in current directory to GIF
-
-- **mp4-to-mp3** - extract audio from MP4 files in current directory
-
-- **truncate** - truncate file contents
-
-- **pyclean** - clean recursively python compilled files
+- **truncate** - truncate log files in the current directory.
 
 - **update** - update, upgrade and clean system packages
 
-- **dbxctl** - upload files to your dropbox
+- **zero-filesystem** - fill in free space on the current SSD/HDD by zeros.
