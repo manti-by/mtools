@@ -15,18 +15,18 @@ do
   else
     if [ "$TO_FORMAT" == "h264" ]; then
       ffmpeg -i "$original_name" \
-        -c:v libx265 -b:v 5000k \
-        -profile:v high -preset slow -crf 22 -tune film \
+        -vf "scale='min(1280,iw)':'min(720,ih)'" -c:v libx264 -b:v 3500k \
+        -profile:v high -preset slow -crf 22 \
         -c:a libfdk_aac -b:a 128k -cutoff 18000 "$result_name"
     elif [ "$TO_FORMAT" == "h265" ]; then
       ffmpeg -i "$original_name" \
-        -c:v libx264 -b:v 3500k -level 4.1 \
-        -profile:v high -preset slow -crf 22 -tune film \
+        -c:v libx265 -b:v 3500k -level 4.1 \
+        -profile:v high -preset slow -crf 22 \
         -c:a libfdk_aac -b:a 128k -cutoff 18000 "$result_name"
     elif [ "$TO_FORMAT" == "flac" ]; then
-      ffmpeg -i "$original_name" -f flac "$result_name"
+      ffmpeg -i "$original_name" -f flac -ar 48000 -sample_fmt s16 "$result_name"
     elif [ "$TO_FORMAT" == "mp3" ]; then
-      ffmpeg -i "$original_name" -ab 320k "$result_name"
+      ffmpeg -i "$original_name" -ab 320k -ar 48000 -sample_fmt s16 "$result_name"
     elif [ "$TO_FORMAT" == "gif" ]; then
       ffmpeg -i "$original_name" -gifflags +transdiff "$result_name"
     else
