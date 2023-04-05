@@ -33,7 +33,7 @@ def prepare_data() -> list[dict]:
     return [
         {
             "link": item.find("./enclosure").attrib["url"],
-            "filename": item.find("./enclosure").attrib["url"].split("/")[-1],
+            "filename": item.find("./link").text.split("/")[-1],
             "pub_date": datetime.strptime(item.find("./pubDate").text, "%a, %d %b %Y %H:%M:%S %z"),
         }
         for item in xml.findall("./channel/item")
@@ -47,7 +47,7 @@ def download(target: str, limit: int):
         if not response.ok:
             logger.error(f"Failed to download a file {podcast['filename']} - {response.reason}")
             continue
-        with open(f"{target}/{podcast['filename']}", "wb") as f:
+        with open(f"{target}/{podcast['filename']}.mp3", "wb") as f:
             f.write(response.content)
             logger.info(f"Podcast {podcast['filename']} successfully downloaded")
 
