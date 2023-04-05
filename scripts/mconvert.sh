@@ -18,7 +18,7 @@ do
 
       ffmpeg -y -i "$original_name" \
         -vf "scale='min(1280,iw)':'min(720,ih)'" \
-        -c:v libxh264 -b:v 3500k \
+        -c:v libx264 -b:v 3500k \
         -profile:v high -preset slow -crf 22 \
         -c:a libfdk_aac -b:a 128k -cutoff 18000 "$result_name"
 
