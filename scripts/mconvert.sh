@@ -22,7 +22,7 @@ do
         -profile:v high -preset slow -crf 22 \
         -c:a libfdk_aac -b:a 128k -cutoff 18000 "$result_name"
 
-    if [ "$TO_FORMAT" == "h264-cuda" ]; then
+    elif [ "$TO_FORMAT" == "h264-cuda" ]; then
       result_name="./$TO_FORMAT/${file_name%.*}.mkv"
 
       ffmpeg -y -vsync 0 -hwaccel cuda -i "$original_name" \
