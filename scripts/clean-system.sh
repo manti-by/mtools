@@ -14,9 +14,11 @@ if [ -x "$(command -v docker)" ]; then
     docker volume ls | awk '$1 == "local" { print $2 }' | xargs --no-run-if-empty docker volume rm
 fi
 
-if [ -x "$(command -v pip)" ]; then
+if [ -x "$(command -v pyenv)" ]; then
     echo "Clean PIP cache"
-    pip cache purge
+    for venv in $(pyenv versions --bare --skip-aliases); do
+        /home/manti/.pyenv/versions/$venv/bin/python -m pip cache purge
+    done
 fi
 
 if [ -x "$(command -v snap)" ]; then
