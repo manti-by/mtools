@@ -13,15 +13,23 @@ from pathlib import Path
 
 BASE_DIR = Path(os.getcwd())
 
+DEFAULT_VIDEO_TARGETS = ["flac", "mp3", "gif", "h264", "h264-cuda", "h265"]
+
 FORMAT_MAP = {
     "avif": ["jpg"],
     "png": ["jpg"],
+    "webp": ["jpg"],
+    "jpg": ["webp"],
     "flac": ["mp3", "ogg"],
-    "avi": ["flac", "mp3", "gif", "h264", "h264-cuda", "h265"],
-    "m4a": ["flac", "mp3", "gif", "h264", "h264-cuda", "h265"],
-    "mp4": ["flac", "mp3", "gif", "h264", "h264-cuda", "h265"],
-    "mkv": ["flac", "mp3", "gif", "h264", "h264-cuda", "h265"],
-    "wma": ["flac", "mp3", "gif", "h264", "h264-cuda", "h265"],
+    "3gp": DEFAULT_VIDEO_TARGETS,
+    "avi": DEFAULT_VIDEO_TARGETS,
+    "m4a": DEFAULT_VIDEO_TARGETS,
+    "mp4": DEFAULT_VIDEO_TARGETS,
+    "mpg": DEFAULT_VIDEO_TARGETS,
+    "mkv": DEFAULT_VIDEO_TARGETS,
+    "wma": DEFAULT_VIDEO_TARGETS,
+    "mts": DEFAULT_VIDEO_TARGETS,
+    "mov": DEFAULT_VIDEO_TARGETS,
 }
 
 SOURCE_FORMAT_CHOICES = list(FORMAT_MAP.keys())
@@ -65,7 +73,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     os.makedirs(BASE_DIR / args.target_format, exist_ok=True)
     for original_name in get_file_list(args.source_format):
-        target_name = original_name.parent / args.target_format / f"{original_name.stem}.{args.target_format}"
+        ext = "mkv" if args.target_format in ("h264", "h264-cuda", "h265") else args.target_format
+        target_name = original_name.parent / args.target_format / f"{original_name.stem}.{ext}"
         if args.target_format == "h264":
             if not args.enable_cuda:
                 commands.append([
@@ -111,9 +120,9 @@ if __name__ == "__main__":
     num_processes = math.floor(os.cpu_count() * 0.75)
     chunk_size = len(commands) // num_processes + 1
     command_chunks = [commands[i: i + chunk_size] for i in range(len(commands))[::chunk_size]]
-    with futures.ProcessPoolExecutor(max_workers=num_processes) as executor:
+    with futures.ProcessPoolExecutor(max_workers=num_processes - 1) as executor:
         processes = []
-        for i in range(num_processes):
+        for i in range(len(command_chunks)):
             processes.append(
                 executor.submit(run_commands, command_chunks[i])
             )

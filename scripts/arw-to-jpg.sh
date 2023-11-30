@@ -1,6 +1,6 @@
 #!/bin/bash
 mkdir jpg
-for file in ./*.arw
+for file in ./*.ARW
 do
   file_name="${file##*/}"
   original_name="./"$file_name
