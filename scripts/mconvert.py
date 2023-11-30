@@ -13,6 +13,8 @@ from pathlib import Path
 
 BASE_DIR = Path(os.getcwd())
 
+RTX_2060_MAX_THREADS = 5
+
 DEFAULT_VIDEO_TARGETS = ["flac", "mp3", "gif", "h264", "h264-cuda", "h265"]
 
 FORMAT_MAP = {
@@ -117,10 +119,12 @@ if __name__ == "__main__":
                 "ffmpeg", "-y", "-i", original_name, target_name
             ])
 
-    num_processes = math.floor(os.cpu_count() * 0.75)
-    chunk_size = len(commands) // num_processes + 1
+    # Max number of concurrent sessions = 3/4 of cores or CUDA max throughput
+    # https://developer.nvidia.com/video-encode-and-decode-gpu-support-matrix-new#Encoder
+    concurrent_sessions = math.floor(os.cpu_count() * 0.75) if not args.enable_cuda else RTX_2060_MAX_THREADS
+    chunk_size = len(commands) // concurrent_sessions + 1
     command_chunks = [commands[i: i + chunk_size] for i in range(len(commands))[::chunk_size]]
-    with futures.ProcessPoolExecutor(max_workers=num_processes - 1) as executor:
+    with futures.ProcessPoolExecutor(max_workers=concurrent_sessions - 1) as executor:
         processes = []
         for i in range(len(command_chunks)):
             processes.append(
