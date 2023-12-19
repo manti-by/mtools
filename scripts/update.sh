@@ -16,6 +16,9 @@ sudo apt clean -y
 sudo apt autoremove -y --purge
 
 if [ -x "$(command -v pyenv)" ]; then
+    header "Update pyenv"
+    cd ~/.pyenv/ && git pull
+
     header "Update pyenv pip versions"
     for venv in $(pyenv versions --bare --skip-aliases); do
         /home/manti/.pyenv/versions/$venv/bin/python -m pip install -U pip
