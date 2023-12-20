@@ -3,8 +3,9 @@ CL="\033[0;96m"
 NC="\033[0m"
 
 function header () {
+    echo -e "${CL}----"
     echo -e "${CL}$1"
-    echo -e "--------${NC}"
+    echo -e "----${NC}"
 }
 
 header "Update system packages"
@@ -16,13 +17,35 @@ sudo apt clean -y
 sudo apt autoremove -y --purge
 
 if [ -x "$(command -v pyenv)" ]; then
-    header "Update pyenv"
+    header "Update pyenv package"
     cd ~/.pyenv/ && git pull
 
     header "Update pyenv pip versions"
     for venv in $(pyenv versions --bare --skip-aliases); do
-        /home/manti/.pyenv/versions/$venv/bin/python -m pip install -U pip
+        ~/.pyenv/versions/$venv/bin/python -m pip install -U pip
     done
+fi
+
+if [ -d ~/.autoenv/ ]; then
+  header "Update autoenv package"
+  cd ~/.autoenv/ && git pull
+fi
+
+if [ -d ~/.nvm/ ]; then
+    header "Install latest NVM version"
+    cd ~/.nvm/ && git pull
+
+    header "Install latest Node.js version"
+    source ~/.nvm/nvm.sh
+    nvm install --lts
+fi
+
+if [ -x "$(command -v npm)" ]; then
+    header "Update latest NPM version"
+    npm install -g lts
+
+    header "Update global NPM packages"
+    npm update -g
 fi
 
 if [ -x "$(command -v flatpak)" ]; then
