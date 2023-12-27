@@ -81,23 +81,23 @@ if __name__ == "__main__":
             if not args.enable_cuda:
                 commands.append([
                     "ffmpeg", "-y", "-i", original_name,
-                    "-vf", SCALE_720P,
+                    "-vf", SCALE_720P, "-fps_mode", "passthrough",
                     "-c:v", "libx264", "-b:v", args.bitrate_video,
-                    "-profile:v", "high", "-preset", "slow", "-crf", "22"
+                    "-profile:v", "high", "-preset", "slow", "-crf", "22",
                     "-c:a", "libfdk_aac", "-b:a", args.bitrate_audio, "-cutoff", "18000", target_name
                 ])
             else:
                 commands.append([
-                    "ffmpeg", "-y", "-vsync", "0", "-hwaccel", "cuda", "-i", original_name,
-                    "-vf", SCALE_720P,
+                    "ffmpeg", "-y", "-hwaccel", "cuda", "-i", original_name,
+                    "-vf", SCALE_720P, "-fps_mode", "passthrough",
                     "-c:v", "h264_nvenc", "-pix_fmt", "yuv420p", "-b:v", args.bitrate_video,
-                    "-profile:v", "high", "-preset", "slow", "-crf", "22",
+                    "-profile:v", "high", "-preset", "slow",
                     "-c:a", "libfdk_aac", "-b:a", args.bitrate_audio, "-cutoff", "18000", target_name
                 ])
         elif args.target_format == "h265":
             commands.append([
                 "ffmpeg", "-y", "-i", original_name,
-                "-vf", SCALE_720P,
+                "-vf", SCALE_720P, "-fps_mode", "passthrough",
                 "-c:v", "libx265", "-b:v", args.bitrate_video, "-level", "4.1",
                 "-profile:v", "high", "-preset", "slow", "-crf", "22",
                 "-c:a", "libfdk_aac", "-b:a", args.bitrate_audio, "-cutoff", "18000", target_name
@@ -119,7 +119,7 @@ if __name__ == "__main__":
                 "ffmpeg", "-y", "-i", original_name, target_name
             ])
 
-    # Max number of concurrent sessions = 3/4 of cores or CUDA max throughput
+    # Max number of concurrent sessions = 3/4 of cores or CUDA max threads
     # https://developer.nvidia.com/video-encode-and-decode-gpu-support-matrix-new#Encoder
     concurrent_sessions = math.floor(os.cpu_count() * 0.75) if not args.enable_cuda else RTX_2060_MAX_THREADS
     chunk_size = len(commands) // concurrent_sessions + 1
