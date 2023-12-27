@@ -42,10 +42,10 @@ fi
 
 if [ -x "$(command -v npm)" ]; then
     header "Update latest NPM version"
-    npm install -g lts
+    npm install -g lts --loglevel=error
 
     header "Update global NPM packages"
-    npm update -g
+    npm update -g --loglevel=error
 fi
 
 if [ -x "$(command -v flatpak)" ]; then

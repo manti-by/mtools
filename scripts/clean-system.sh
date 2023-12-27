@@ -23,7 +23,7 @@ fi
 
 if [ -x "$(command -v npm)" ]; then
     echo "Clean NPM cache"
-    npm cache clean --force
+    npm cache clean --force --loglevel=error
 fi
 
 if [ -x "$(command -v snap)" ]; then
