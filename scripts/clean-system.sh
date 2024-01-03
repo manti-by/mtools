@@ -1,33 +1,42 @@
-#!/bin/sh
-echo "Clean system journal"
+#!/bin/bash
+CL="\033[0;96m"
+NC="\033[0m"
+
+function header () {
+    echo -e "${CL}----"
+    echo -e "${CL}$1"
+    echo -e "----${NC}"
+}
+
+header "Clean system journal"
 sudo journalctl --vacuum-time=1d
 
-echo "Delete old logs"
+header "Delete old logs"
 sudo find /var/log/ -name "*.gz" -type f -delete
 sudo find /var/log/ -name "*.log.*" -type f -delete
 
 if [ -x "$(command -v docker)" ]; then
-    echo "Remove stopped docker containers, unused images and networks"
+    header "Remove stopped docker containers, unused images and networks"
     docker system prune --all --force
 
-    echo "Remove docker stale volumes"
+    header "Remove docker stale volumes"
     docker volume ls | awk '$1 == "local" { print $2 }' | xargs --no-run-if-empty docker volume rm
 fi
 
 if [ -x "$(command -v pyenv)" ]; then
-    echo "Clean PIP cache"
+    header "Clean PIP cache"
     for venv in $(pyenv versions --bare --skip-aliases); do
-        /home/manti/.pyenv/versions/$venv/bin/python -m pip cache purge
+        /home/manti/.pyenv/versions/$venv/bin/pip cache purge
     done
 fi
 
 if [ -x "$(command -v npm)" ]; then
-    echo "Clean NPM cache"
+    header "Clean NPM cache"
     npm cache clean --force --loglevel=error
 fi
 
 if [ -x "$(command -v snap)" ]; then
-    echo "Remove stale snaps"
+    header "Remove stale snaps"
     set -eu
     snap list --all | awk '/disabled/{print $1, $3}' |
         while read snapname revision; do
