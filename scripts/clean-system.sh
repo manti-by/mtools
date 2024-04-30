@@ -43,3 +43,10 @@ if [ -x "$(command -v snap)" ]; then
             sudo snap remove "$snapname" --revision="$revision"
         done
 fi
+
+if [ -x "$(command -v psql)" ]; then
+    header "Drop test databases"
+    export PGPASSWORD=pinata
+    psql -Atqc "SELECT 'DROP DATABASE ' || quote_ident(datname) || ';' FROM pg_database WHERE datname like 'test_%';" | psql -U pinata -h localhost
+fi
+

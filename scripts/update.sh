@@ -18,7 +18,7 @@ sudo apt autoremove -y --purge
 
 if [ -x "$(command -v pyenv)" ]; then
     header "Update pyenv package"
-    cd ~/.pyenv/ && git pull
+    pyenv update
 
     header "Update pyenv pip versions"
     for venv in $(pyenv versions --bare --skip-aliases); do
