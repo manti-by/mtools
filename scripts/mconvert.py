@@ -38,7 +38,8 @@ FORMAT_MAP = {
 SOURCE_FORMAT_CHOICES = list(FORMAT_MAP.keys())
 TARGET_FORMAT_CHOICES = list(set(reduce(lambda x, y: x + y, FORMAT_MAP.values())))
 
-SCALE_720P = "scale='min(1280,iw)':'min(720,ih)'"
+SCALE_720P = "scale=-2:'min(720,ih)'"
+SCALE_1080P = "scale=-2:'min(1080,ih)'"
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -51,10 +52,10 @@ parser.add_argument("source_format", help="Source format", type=str, choices=SOU
 parser.add_argument("target_format", help="Target format", type=str, choices=TARGET_FORMAT_CHOICES)
 
 parser.add_argument(
-    "-b:v", "--bitrate_video", dest="bitrate_video", default="3500k", help="Target video bitrate"
+    "-b:v", "--bitrate_video", dest="bitrate_video", default="5000k", help="Target video bitrate"
 )
 parser.add_argument(
-    "-b:a", "--bitrate_audio", dest="bitrate_audio", default="128k", help="Target audio bitrate"
+    "-b:a", "--bitrate_audio", dest="bitrate_audio", default="192k", help="Target audio bitrate"
 )
 parser.add_argument(
     "-c", "--enable_cuda", dest="enable_cuda", type=bool, default=False, help="Enable CUDA support"
@@ -82,18 +83,18 @@ if __name__ == "__main__":
             if not args.enable_cuda:
                 commands.append([
                     "ffmpeg", "-y", "-i", original_name,
-                    "-vf", SCALE_720P, "-fps_mode", "passthrough",
-                    "-c:v", "libx264", "-b:v", args.bitrate_video,
-                    "-profile:v", "high", "-preset", "slow", "-crf", "22",
-                    "-c:a", "libfdk_aac", "-b:a", args.bitrate_audio, "-cutoff", "18000", target_name
+                    "-vf", SCALE_1080P, "-fps_mode", "passthrough",
+                    "-c:v", "libx264", "-pix_fmt", "yuv420p", "-b:v", args.bitrate_video,
+                     "-profile:v", "high", "-preset", "slow", "-crf", "22",
+                    "-c:a", "libfdk_aac", "-b:a", args.bitrate_audio, target_name
                 ])
             else:
                 commands.append([
                     "ffmpeg", "-y", "-hwaccel", "cuda", "-i", original_name,
-                    "-vf", SCALE_720P, "-fps_mode", "passthrough",
+                    "-vf", SCALE_1080P, "-fps_mode", "passthrough",
                     "-c:v", "h264_nvenc", "-pix_fmt", "yuv420p", "-b:v", args.bitrate_video,
                     "-profile:v", "high", "-preset", "slow",
-                    "-c:a", "libfdk_aac", "-b:a", args.bitrate_audio, "-cutoff", "18000", target_name
+                    "-c:a", "libfdk_aac", "-b:a", args.bitrate_audio, target_name
                 ])
         elif args.target_format == "h265":
             commands.append([
