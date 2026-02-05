@@ -1,4 +1,6 @@
 #!/bin/bash
+set -eu
+
 CL="\033[0;96m"
 NC="\033[0m"
 
@@ -23,13 +25,6 @@ if [ -x "$(command -v docker)" ]; then
     docker volume ls | awk '$1 == "local" { print $2 }' | xargs --no-run-if-empty docker volume rm
 fi
 
-if [ -x "$(command -v pyenv)" ]; then
-    header "Clean PIP cache"
-    for venv in $(pyenv versions --bare --skip-aliases); do
-        /home/manti/.pyenv/versions/$venv/bin/pip cache purge
-    done
-fi
-
 if [ -x "$(command -v npm)" ]; then
     header "Clean NPM cache"
     npm cache clean --force --loglevel=error
@@ -43,10 +38,3 @@ if [ -x "$(command -v snap)" ]; then
             sudo snap remove "$snapname" --revision="$revision"
         done
 fi
-
-if [ -x "$(command -v psql)" ]; then
-    header "Drop test databases"
-    export PGPASSWORD=pinata
-    psql -Atqc "SELECT 'DROP DATABASE ' || quote_ident(datname) || ';' FROM pg_database WHERE datname like 'test_%';" | psql -U pinata -h localhost
-fi
-

@@ -13,7 +13,7 @@ sudo apt update
 sudo apt upgrade -y
 
 header "Autoremove system packages"
-sudo apt clean -y 
+sudo apt clean -y
 sudo apt autoremove -y --purge
 
 if [ -x "$(command -v pyenv)" ]; then
@@ -41,9 +41,6 @@ if [ -d ~/.nvm/ ]; then
 fi
 
 if [ -x "$(command -v npm)" ]; then
-    header "Update latest NPM version"
-    npm install -g lts --loglevel=error
-
     header "Update global NPM packages"
     npm update -g --loglevel=error
 fi

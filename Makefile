@@ -1,4 +1,4 @@
 update:
-	./install.sh remove
+	-./install.sh remove
 	git pull
 	./install.sh
