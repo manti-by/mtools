@@ -16,16 +16,6 @@ header "Autoremove system packages"
 sudo apt clean -y
 sudo apt autoremove -y --purge
 
-if [ -x "$(command -v pyenv)" ]; then
-    header "Update pyenv package"
-    pyenv update
-
-    header "Update pyenv pip versions"
-    for venv in $(pyenv versions --bare --skip-aliases); do
-        ~/.pyenv/versions/$venv/bin/python -m pip install -U pip
-    done
-fi
-
 if [ -d ~/.autoenv/ ]; then
   header "Update autoenv package"
   cd ~/.autoenv/ && git pull

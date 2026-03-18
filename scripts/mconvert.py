@@ -24,6 +24,7 @@ FORMAT_MAP = {
     "jpg": ["webp"],
     "flac": ["mp3", "ogg"],
     "3gp": DEFAULT_VIDEO_TARGETS,
+    "ape": DEFAULT_VIDEO_TARGETS,
     "avi": DEFAULT_VIDEO_TARGETS,
     "m4a": DEFAULT_VIDEO_TARGETS,
     "mp4": DEFAULT_VIDEO_TARGETS,

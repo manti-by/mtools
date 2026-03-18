@@ -15,7 +15,7 @@ if [ "$TARGET" == "install" ]; then
         file_name="${file##*/}"
         original_name=$(pwd)"/scripts/$file_name"
         result_name="/home/${USER}/.local/bin/${file_name%.*}"
-        ln - $result_namesf $original_name
+        ln -s $original_name $result_name
         echo "    ${file_name%.*} installed"
         echo "$file_name" >> install.lock
     done
